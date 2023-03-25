@@ -9,21 +9,28 @@ import MapBoxFunction from "../MapBox/MapBoxFunction";
 
 const Drawer = () => {
   const [sBoxText, setsBoxText] = useState("");
-  const [res, setResponse] = useState(null);
-  const [selectedValue, setSelectedValue] = useState("");
-  const [selectedOption, setSelectedOption] = useState([]);
+  const [res, setResponse] = useState("");
+  const [placeholderValue, setPlaceholderValue] = useState("Search Location");
+  const [selectedOption, setSelectedOption] = useState("");
+  const [lat, setLat] = useState(23.76024811036424);
+  const [lg, setLg] = useState(90.36105114959472);
+  const [placeType, setPlaceType] = useState("");
 
-  function handleSelectChange(event) {
-    setSelectedOption(event.target.value);
-    document.getElementById("seletedPlaceBox").style.display = "none";
-  }
+  // function handleSelectChange(event) {
+  //   setSelectedOption(event.target.value);
+  //   setPlaceholderValue(selectedOption);
+  //   // window.document.getElementById("seletedPlaceBox").style.display = "none";
+  // }
 
   // barikoi auto complete
   const handleForm = (event) => {
     event.preventDefault();
     const form = event.target;
     const sText = form.searchText.value;
-    document.getElementById("seletedPlaceBox").style.display = "block";
+    setLat(23.76024811036424);
+    setLg(90.36105114959472);
+    setPlaceType("");
+    window.document.getElementById("vanish").style.display = "block";
     setsBoxText(sText);
   };
   useEffect(() => {
@@ -40,10 +47,22 @@ const Drawer = () => {
   }, [sBoxText]);
 
   // for auto complete
+  const handleOnClick = (place) => {
+    console.log(place);
+    // console.log(place.latitude + "From place");
+    // console.log(place.latitude + "From place");
+
+    setSelectedOption(place.address);
+    setLat(place?.latitude);
+    setLg(place?.longitude);
+    setPlaceType(place.pType);
+    document.getElementById("vanish").style.display = "none";
+  };
 
   // console.log(res);
   // console.log(selectedValue);
   //implementining dark theme
+
   const [isChecked, setIsChecked] = useState(false);
 
   const handleToggle = () => {
@@ -61,7 +80,7 @@ const Drawer = () => {
         />
         <div className="drawer-content  flex justify-center items-center">
           {/* map */}
-          <MapBoxFunction />
+          <MapBoxFunction lat={lat} lg={lg} placeType={placeType} />
           <label
             htmlFor="my-drawer"
             className="text-black text-4xl absolute top-10 left-5 z-40">
@@ -115,29 +134,13 @@ const Drawer = () => {
                       // onChange={(e) => setValue(e.target.value)}
                       type="text"
                       name="searchText"
-                      placeholder="Search Location"
+                      placeholder={placeholderValue}
                       // onClick={handleSearchBox}
                       className={
                         isChecked
-                          ? "bg-black py-2 text-center  text-white text-xl "
-                          : "bg-white py-2 text-center text-black text-xl "
+                          ? "bg-black py-2 text-xs text-center  text-white "
+                          : "bg-white py-2 text-xs text-center text-black "
                       }></input>
-
-                    {res && (
-                      <select
-                        value={selectedOption}
-                        id="seletedPlaceBox"
-                        onChange={handleSelectChange}>
-                        {res.map((r, i) => (
-                          <option
-                            value={r.address}
-                            className="relative overflow-hidden"
-                            key={i}>
-                            {r.address}
-                          </option>
-                        ))}
-                      </select>
-                    )}
 
                     <button
                       // onClick={handleEmptySearchBox}
@@ -155,6 +158,26 @@ const Drawer = () => {
                   autoComplete="postal-code"
                 /> */}
               </form>
+              <div
+                id="vanish"
+                className={isChecked ? "text-black" : "text-white"}>
+                {res &&
+                  res.map((r, i) => (
+                    <li
+                      name="optionName"
+                      value={r.address}
+                      onClick={() => handleOnClick(r)}
+                      className={
+                        isChecked
+                          ? "text-white text-xl w-full"
+                          : "text-black text-xl w-full"
+                      }
+                      // className="w-full "
+                      key={i}>
+                      {r.address}
+                    </li>
+                  ))}
+              </div>
 
               {/* <form
                 onSubmit={handleForm}
@@ -176,7 +199,9 @@ const Drawer = () => {
                 </form> */}
             </div>
             {/* <AutocompleteInput /> */}
-            <p className="mt-20">Seleted Option: {selectedOption}</p>
+            <p className={isChecked ? "mt-20 text-black" : "mt-20 text-white"}>
+              Seleted Option: {selectedOption}
+            </p>
           </ul>
         </div>
       </div>
