@@ -91,7 +91,6 @@ const Drawer = () => {
                 type="checkbox"
                 className="toggle toggle-warning"
                 checked={!isChecked}
-                defaultChecked
                 onChange={handleToggle}
               />
             </div>
