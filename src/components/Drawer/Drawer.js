@@ -41,8 +41,15 @@ const Drawer = () => {
 
   // for auto complete
 
-  console.log(res);
-  console.log(selectedValue);
+  // console.log(res);
+  // console.log(selectedValue);
+  //implementining dark theme
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+    // console.log(isChecked);
+  };
   return (
     <div>
       {/* drawer code   */}
@@ -63,18 +70,46 @@ const Drawer = () => {
         </div>
         <div className="drawer-side">
           <label htmlFor="my-drawer" className="drawer-overlay"></label>
-          <ul className="  menu p-4 w-80 bg-white  text-base-content">
+          <ul
+            className={
+              isChecked
+                ? "menu p-4 w-80 bg-white  text-base-content"
+                : "menu p-4 w-80 bg-black  text-white"
+            }>
             {/* <!-- Sidebar content here -->   */}
 
-            <h2 className="font-bold text-3xl text-black mb-5">
-              Bari<span className="text-green-400">koi</span>
-            </h2>
-            <div className=" bg-white border-spacing-0 py-2 text-2xl rounded-md shadow-2xl">
+            <div className="flex justify-between">
+              <h2
+                className={
+                  isChecked
+                    ? "font-bold text-3xl text-black mb-5"
+                    : "font-bold text-3xl text-white mb-5"
+                }>
+                Bari<span className="text-green-400">koi</span>
+              </h2>
+              <input
+                type="checkbox"
+                className="toggle toggle-warning"
+                checked={!isChecked}
+                defaultChecked
+                onChange={handleToggle}
+              />
+            </div>
+            <div
+              className={
+                isChecked
+                  ? "bg-black border-spacing-0 py-2 text-2xl rounded-md shadow-2xl"
+                  : "bg-white border-spacing-0 py-2 text-2xl rounded-md"
+              }>
               <form
                 onSubmit={handleForm}
-                className="flex justify-center items-center">
+                className={
+                  isChecked
+                    ? "flex justify-center items-center"
+                    : "flex justify-center items-cente"
+                }>
                 <AddressAutofill accessToken="pk.eyJ1Ijoic21zaGFyaXllciIsImEiOiJjbGZtZjRueWEwYW16M3dtbTRuenBuMng3In0.Djh9Xo74MHda0QMlqoEX8w">
-                  <div>
+                  <div className="flex justify-between ">
                     <input
                       autoComplete="shipping address-line1"
                       // value={value}
@@ -83,7 +118,11 @@ const Drawer = () => {
                       name="searchText"
                       placeholder="Search Location"
                       // onClick={handleSearchBox}
-                      className=" bg-white py-2 text-center text-black text-xl "></input>
+                      className={
+                        isChecked
+                          ? "bg-black py-2 text-center  text-white text-xl "
+                          : "bg-white py-2 text-center text-black text-xl "
+                      }></input>
 
                     {res && (
                       <select
@@ -138,7 +177,7 @@ const Drawer = () => {
                 </form> */}
             </div>
             {/* <AutocompleteInput /> */}
-            <p>Seleted Option: {selectedOption}</p>
+            <p className="mt-20">Seleted Option: {selectedOption}</p>
           </ul>
         </div>
       </div>
